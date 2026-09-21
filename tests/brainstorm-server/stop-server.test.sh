@@ -123,6 +123,13 @@ case "$OUT" in
   *) bad "missing pid file: unexpected status" "$OUT" ;;
 esac
 
+# --- Test 3b: a path that is not a session directory fails loudly ---
+OUT="$("$STOP" "/nonexistent/$$/session" 2>&1)" && bad "missing session dir exited 0" "$OUT"
+case "$OUT" in
+  *"session dir not found"*) ok "missing session dir reports an error" ;;
+  *) bad "missing session dir: unexpected output" "$OUT" ;;
+esac
+
 # --- Test 4: a node server.cjs impostor with missing instance id is spared ---
 SESS="$(mktemp -d)"; track_dir "$SESS"; mkdir -p "$SESS/state"
 ( exec -a "node server.cjs" sleep 600 ) &

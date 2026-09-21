@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Helper functions for Claude Code skill tests
 
+# Repository root — the plugin directory these tests exercise.
+RS_POWER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+
 # Run Claude Code with a prompt and capture output
 # Usage: run_claude "prompt text" [timeout_seconds] [allowed_tools]
 run_claude() {
@@ -10,7 +13,15 @@ run_claude() {
     local output_file=$(mktemp)
 
     # Build command as an argv array so timeout wraps claude directly.
-    local cmd=(claude -p "$prompt")
+    # --plugin-dir loads this working copy, so the tests never depend on the
+    # plugin being installed. --setting-sources drops user settings: a response
+    # language or another plugin's skills would otherwise decide what these
+    # English assertions see. --add-dir lets a skill read its own reference
+    # files, which live outside the test's working directory.
+    local cmd=(claude -p "$prompt"
+        --plugin-dir "$RS_POWER_DIR"
+        --setting-sources project,local
+        --add-dir "$RS_POWER_DIR")
     if [ -n "$allowed_tools" ]; then
         cmd+=(--allowed-tools="$allowed_tools")
     fi
@@ -198,6 +209,7 @@ EOF
 }
 
 # Export functions for use in tests
+export RS_POWER_DIR
 export -f run_claude
 export -f assert_contains
 export -f assert_not_contains

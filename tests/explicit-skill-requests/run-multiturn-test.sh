@@ -26,22 +26,7 @@ echo ""
 
 cd "$PROJECT_DIR"
 
-# Create a dummy plan file
-cat > "$PROJECT_DIR/docs/rs-power/plans/auth-system.md" << 'EOF'
-# Auth System Implementation Plan
-
-## Task 1: Add User Model
-Create user model with email and password fields.
-
-## Task 2: Add Auth Routes
-Create login and register endpoints.
-
-## Task 3: Add JWT Middleware
-Protect routes with JWT validation.
-
-## Task 4: Write Tests
-Add comprehensive test coverage.
-EOF
+cp "$SCRIPT_DIR/fixtures/auth-system-plan.md" "$PROJECT_DIR/docs/rs-power/plans/auth-system.md"
 
 # Turn 1: Start a planning conversation
 echo ">>> Turn 1: Starting planning conversation..."
@@ -49,8 +34,9 @@ TURN1_LOG="$OUTPUT_DIR/turn1.json"
 claude -p "I need to implement an authentication system. Let's plan this out. The requirements are: user registration with email/password, JWT tokens, and protected routes." \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 2 \
-    --output-format stream-json \
+    --output-format stream-json --verbose \
     > "$TURN1_LOG" 2>&1 || true
 
 echo "Turn 1 complete."
@@ -63,8 +49,9 @@ claude -p "Good analysis. I've already written the plan to docs/rs-power/plans/a
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 2 \
-    --output-format stream-json \
+    --output-format stream-json --verbose \
     > "$TURN2_LOG" 2>&1 || true
 
 echo "Turn 2 complete."
@@ -77,8 +64,9 @@ claude -p "rs-subagent-driven-development, please" \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 2 \
-    --output-format stream-json \
+    --output-format stream-json --verbose \
     > "$TURN3_LOG" 2>&1 || true
 
 echo "Turn 3 complete."

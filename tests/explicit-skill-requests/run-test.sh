@@ -45,19 +45,7 @@ cp "$PROMPT_FILE" "$OUTPUT_DIR/prompt.txt"
 PROJECT_DIR="$OUTPUT_DIR/project"
 mkdir -p "$PROJECT_DIR/docs/rs-power/plans"
 
-# Create a dummy plan file for mid-conversation tests
-cat > "$PROJECT_DIR/docs/rs-power/plans/auth-system.md" << 'EOF'
-# Auth System Implementation Plan
-
-## Task 1: Add User Model
-Create user model with email and password fields.
-
-## Task 2: Add Auth Routes
-Create login and register endpoints.
-
-## Task 3: Add JWT Middleware
-Protect routes with JWT validation.
-EOF
+cp "$SCRIPT_DIR/fixtures/auth-system-plan.md" "$PROJECT_DIR/docs/rs-power/plans/auth-system.md"
 
 # Run Claude with isolated environment
 LOG_FILE="$OUTPUT_DIR/claude-output.json"
@@ -71,8 +59,9 @@ echo ""
 timeout 300 claude -p "$PROMPT" \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns "$MAX_TURNS" \
-    --output-format stream-json \
+    --output-format stream-json --verbose \
     > "$LOG_FILE" 2>&1 || true
 
 echo ""

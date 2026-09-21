@@ -13,6 +13,14 @@ if [[ -z "$SESSION_DIR" ]]; then
   exit 1
 fi
 
+# A path that isn't a session directory — a typo, or start-server's --project-dir
+# flag passed here by mistake — must not report not_running while the server it
+# was meant to stop keeps serving.
+if [[ ! -d "$SESSION_DIR" ]]; then
+  printf '{"error": "session dir not found", "session_dir": "%s"}\n' "$SESSION_DIR"
+  exit 1
+fi
+
 STATE_DIR="${SESSION_DIR}/state"
 PID_FILE="${STATE_DIR}/server.pid"
 SERVER_ID_FILE="${STATE_DIR}/server-instance-id"
