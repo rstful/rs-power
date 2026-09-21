@@ -52,6 +52,10 @@ v6.4.1 을 fork 해서 Claude Code 에 필요한 스킬만 남겼다.
   (`rs-power:final-reviewer`), 마무리는 Haiku 4.5.
 - 스킬 frontmatter 의 모델은 그 스킬을 부른 턴에만 적용된다. rs-brainstorming·rs-systematic-debugging
   처럼 여러 턴 가는 단계는 세션 모델이 다르면 `/model`·`/effort` 전환을 한 줄로 권한다.
+- **실측(Claude Code 2.1.278)**: frontmatter 모델은 사용자가 `/rs-power:<스킬>` 로 직접 부를 때만
+  적용된다. 모델이 Skill 도구로 같은 스킬을 로드하면 세션 모델이 유지된다. 즉 위 5개 스킬의 모델
+  지정은 자동 호출 경로에서 효력이 없으니, 그 단계의 모델이 중요하면 세션 모델을 확인하고 한 줄로
+  알린다. `rs-power:` 에이전트 4개는 영향이 없다 — 에이전트 정의의 모델은 항상 적용된다.
 - 정확한 effort 값, 승급 규칙, Fable 을 쓰는 두 지점: [model-policy.md](skills/using-rs-power/references/model-policy.md)
 
 **Codex 교차 검토 (선택)** — `codex` CLI 가 설치돼 있으면 계획 완성 후 1회(GPT-6-Astra medium), 최종 리뷰

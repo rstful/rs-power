@@ -57,6 +57,15 @@ session model differs from the table, say once, in one line, which
 `/model` and `/effort` commands would match it. Do not switch for your
 human partner.
 
+Measured on Claude Code 2.1.278, the switch happens only when your human
+partner types the slash command: `/rs-power:rs-finishing-a-development-branch`
+in a Sonnet session answered on Haiku, while the same skill loaded through the
+Skill tool stayed on Sonnet. So on the path where you load a skill yourself —
+the common one — treat the frontmatter model as advisory and the session model
+as what you are actually running. When that gap matters for a stage in the
+table, say so in one line and let your partner decide; the `rs-power:` agents
+below are unaffected, since an agent definition's model always holds.
+
 ## Codex cross-check (optional)
 
 Run only when `command -v codex` finds the Codex CLI; otherwise skip
