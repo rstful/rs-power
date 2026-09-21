@@ -8,7 +8,7 @@
 #   - >=3 git commits (initial + per-task commits, exercising SDD's
 #     commit-per-task workflow shape)
 #   - >=2 Claude Code subagent dispatches via Agent or Task (drill only asserts >=1)
-#   - Claude Code task-tracking tool usage (drill makes no assertion)
+#   - SDD ledger writes that landed (drill makes no assertion)
 #   - test/math.test.js exists (drill relies on `npm test` succeeding)
 #   - analyze-token-usage.py token-budget telemetry
 # Kept until those assertions are added to drill or explicitly retired.
@@ -229,33 +229,12 @@ echo ""
 # compaction; the workspace itself is deleted after the final review, so the
 # session transcript is what still shows the ledger was written.
 echo "Test 3: Progress ledger..."
-# Look for writes, not mentions: the skill text loaded into the transcript names
-# progress.md and even shows example completion lines, so any substring match
-# over the raw transcript passes with nothing written. Read the tool calls
-# instead, and count only the ones that write the ledger.
+# Look for writes that landed, not mentions: the skill text is in the transcript,
+# it names progress.md and shows example completion lines, and an attempted write
+# that errored is not a ledger. ledger-evidence.js pairs each ledger write with
+# its tool result and counts only the successful ones.
 read -r ledger_writes ledger_completions <<EOF
-$(node -e '
-const fs = require("fs");
-let writes = 0, completions = 0;
-for (const line of fs.readFileSync(process.argv[1], "utf8").split("\n")) {
-  if (!line.trim()) continue;
-  let entry; try { entry = JSON.parse(line); } catch { continue; }
-  const content = entry.message && entry.message.content;
-  if (!Array.isArray(content)) continue;
-  for (const block of content) {
-    if (block.type !== "tool_use" || !block.input) continue;
-    const command = String(block.input.command || "");
-    const path = String(block.input.file_path || "");
-    const writeTool = block.name === "Write" || block.name === "Edit" || block.name === "MultiEdit";
-    const wrote = />>?\s*"?[^"\s]*progress\.md/.test(command) || (writeTool && /progress\.md$/.test(path));
-    if (!wrote) continue;
-    writes++;
-    const body = command + String(block.input.content || "") + String(block.input.new_string || "");
-    completions += (body.match(/Task \d+: complete/g) || []).length;
-  }
-}
-process.stdout.write(writes + " " + completions);
-' "$SESSION_FILE")
+$(node "$SCRIPT_DIR/ledger-evidence.js" "$SESSION_FILE")
 EOF
 if [ "${ledger_writes:-0}" -ge 1 ] && [ "${ledger_completions:-0}" -ge 1 ]; then
     echo "  [PASS] Ledger written ($ledger_writes write(s), $ledger_completions completion line(s))"

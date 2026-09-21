@@ -92,6 +92,7 @@ upstream 의 `skills/<name>/` 은 여기서 `skills/rs-<name>/` 이다. upstream
 cd tests/brainstorm-server && npm install && npm test
 bash tests/claude-code/test-sdd-workspace.sh
 node tests/context-guard/context-guard.test.js
+node tests/claude-code/test-ledger-evidence.js
 bash tests/claude-code/test-model-policy.sh
 ```
 
