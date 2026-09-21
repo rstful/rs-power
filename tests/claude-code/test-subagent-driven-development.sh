@@ -121,7 +121,9 @@ else
     exit 1
 fi
 
-if assert_contains "$output" "implementer.*fix\|fix.*issues" "Implementer fixes issues"; then
+# The skill calls this the fix loop: a fix dispatch plus a scoped re-review per
+# round, so match its own vocabulary rather than only "implementer ... fix".
+if assert_contains "$output" "implementer.*fix\|fix.*issues\|fix dispatch\|fix round\|fix loop" "Implementer fixes issues"; then
     : # pass
 else
     exit 1
@@ -136,7 +138,9 @@ output=$(run_claude "In rs-subagent-driven-development, how does the controller 
 Controller provides: <directly or by file>
 Implementer must read plan file: <yes or no>" "$CLAUDE_PROMPT_TIMEOUT")
 
-if assert_contains "$output" "provide.*directly\|full.*text\|paste\|include.*prompt" "Provides text directly"; then
+# The controller extracts the task's own text with scripts/task-brief and hands
+# over that file — the point is that the implementer never reads the whole plan.
+if assert_contains "$output" "provide.*directly\|full.*text\|paste\|include.*prompt\|task-brief\|brief file" "Provides the task text, not the plan"; then
     : # pass
 else
     exit 1
