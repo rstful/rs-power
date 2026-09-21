@@ -30,22 +30,7 @@ else
     echo "No user CLAUDE.md found, proceeding without"
 fi
 
-# Create a dummy plan file
-cat > "$PROJECT_DIR/docs/rs-power/plans/auth-system.md" << 'EOF'
-# Auth System Implementation Plan
-
-## Task 1: Add User Model
-Create user model with email and password fields.
-
-## Task 2: Add Auth Routes
-Create login and register endpoints.
-
-## Task 3: Add JWT Middleware
-Protect routes with JWT validation.
-
-## Task 4: Write Tests
-Add comprehensive test coverage.
-EOF
+cp "$SCRIPT_DIR/fixtures/auth-system-plan.md" "$PROJECT_DIR/docs/rs-power/plans/auth-system.md"
 
 echo ""
 
@@ -55,6 +40,7 @@ claude -p "I want to add user authentication to my app. Help me think through th
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 3 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn1.json" 2>&1 || true
@@ -67,6 +53,7 @@ claude -p "Let's use JWT tokens with 24-hour expiry. Email/password registration
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 3 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn2.json" 2>&1 || true
@@ -79,6 +66,7 @@ claude -p "Great, write this up as an implementation plan." \
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 3 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn3.json" 2>&1 || true
@@ -86,11 +74,12 @@ echo "Done."
 
 # Turn 4: Confirm plan looks good
 echo ">>> Turn 4: Confirming plan..."
-claude -p "The plan looks good. What are my options for executing it?" \
+claude -p "The plan looks good — I saved it to docs/rs-power/plans/auth-system.md. What are my options for executing it?" \
     --continue \
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 2 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn4.json" 2>&1 || true
@@ -104,6 +93,7 @@ claude -p "rs-subagent-driven-development, please" \
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 2 \
     --output-format stream-json --verbose \
     > "$FINAL_LOG" 2>&1 || true

@@ -14,6 +14,13 @@ mkdir -p "$OUTPUT_DIR"
 PROJECT_DIR="$OUTPUT_DIR/project"
 mkdir -p "$PROJECT_DIR/docs/rs-power/plans"
 
+# The scripted turns ask for a plan but never produce one, and Claude is right to
+# refuse to plan an auth system for an unknown stack. Without a plan on disk the
+# final turn has nothing to execute, so the test would measure that refusal
+# instead of skill triggering. A stub plan is not enough either — Claude reads
+# three one-line tasks and says so — hence the concrete fixture.
+cp "$SCRIPT_DIR/fixtures/auth-system-plan.md" "$PROJECT_DIR/docs/rs-power/plans/auth-system.md"
+
 echo "=== Extended Multi-Turn Test ==="
 echo "Output dir: $OUTPUT_DIR"
 echo "Plugin dir: $PLUGIN_DIR"
@@ -26,6 +33,7 @@ echo ">>> Turn 1: Brainstorming request..."
 claude -p "I want to add user authentication to my app. Help me think through this." \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 3 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn1.json" 2>&1 || true
@@ -37,6 +45,7 @@ claude -p "Let's use JWT tokens with 24-hour expiry. Email/password registration
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 3 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn2.json" 2>&1 || true
@@ -48,6 +57,7 @@ claude -p "Great, write this up as an implementation plan." \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 3 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn3.json" 2>&1 || true
@@ -55,10 +65,11 @@ echo "Done."
 
 # Turn 4: Confirm plan looks good
 echo ">>> Turn 4: Confirming plan..."
-claude -p "The plan looks good. What are my options for executing it?" \
+claude -p "The plan looks good — I saved it to docs/rs-power/plans/auth-system.md. What are my options for executing it?" \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 2 \
     --output-format stream-json --verbose \
     > "$OUTPUT_DIR/turn4.json" 2>&1 || true
@@ -71,6 +82,7 @@ claude -p "rs-subagent-driven-development, please" \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
+    --setting-sources project,local \
     --max-turns 2 \
     --output-format stream-json --verbose \
     > "$FINAL_LOG" 2>&1 || true
