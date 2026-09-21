@@ -1,11 +1,19 @@
 ---
 name: brainstorming
 description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+model: opus
+effort: medium
 ---
 
 # Brainstorming Ideas Into Designs
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+
+**Model:** this skill runs on Opus 5 at medium effort, but its frontmatter
+only covers the turn that invoked it. If the session model differs, say
+once, in one line, that `/model opus` and `/effort medium` would match
+`../using-rs-power/references/model-policy.md`. The switch is your
+human partner's call.
 
 Start by classifying how much process the request needs, then work
 through your path: understand the context, refine the idea, present a

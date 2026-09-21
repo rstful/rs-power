@@ -52,6 +52,7 @@ These thoughts mean STOP—you're rationalizing:
 ## Platform Adaptation
 
 Read `references/claude-code-tools.md` for Claude Code specific instructions.
+Read `references/model-policy.md` for which model and effort each stage runs on.
 
 ## User Instructions
 

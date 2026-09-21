@@ -31,7 +31,9 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 **2. Dispatch code reviewer subagent:**
 
-Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md](code-reviewer.md)
+Dispatch `rs-power:final-reviewer`, filling the template at [code-reviewer.md](code-reviewer.md).
+Omit `model` — the agent definition sets it. For a security-sensitive
+branch (auth, crypto, secrets, permissions), pass `model: fable`.
 
 **Placeholders:**
 - `{DESCRIPTION}` - Brief summary of what you built
@@ -39,7 +41,14 @@ Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md
 - `{BASE_SHA}` - Starting commit
 - `{HEAD_SHA}` - Ending commit
 
-**3. Act on feedback:**
+**3. Optional Codex cross-check (final review before merge only):**
+
+If `command -v codex` finds the Codex CLI, run the final-review command
+from `../using-rs-power/references/model-policy.md` once, alongside the
+reviewer, and weigh its findings the same way. Without Codex, skip this
+step silently.
+
+**4. Act on feedback:**
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
 - Note Minor issues for later

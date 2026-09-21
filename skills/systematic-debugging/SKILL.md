@@ -1,6 +1,8 @@
 ---
 name: systematic-debugging
 description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+model: opus
+effort: high
 ---
 
 # Systematic Debugging
@@ -10,6 +12,12 @@ description: Use when encountering any bug, test failure, or unexpected behavior
 **Core principle:** ALWAYS find root cause before attempting fixes. Symptom fixes are failure.
 
 **Violating the letter of this process is violating the spirit of debugging.**
+
+**Model:** this skill runs on Opus 5 at high effort, but its frontmatter
+only covers the turn that invoked it. If the session model differs, say
+once, in one line, that `/model opus` and `/effort high` would match
+`../using-rs-power/references/model-policy.md`. The switch is your
+human partner's call.
 
 ## The Iron Law
 
@@ -158,6 +166,9 @@ You MUST complete each phase before proceeding to the next.
    - Did it work? Yes → Phase 4
    - Didn't work? Form NEW hypothesis
    - DON'T add more fixes on top
+   - Second hypothesis failed? Recommend `/model fable` and
+     `/effort xhigh` to your human partner before the third — one of the
+     two Fable seats in model-policy.md
 
 4. **When You Don't Know**
    - Say "I don't understand X"

@@ -1,6 +1,8 @@
 ---
 name: writing-plans
 description: Use when you have a spec or requirements for a multi-step task, before touching code
+model: opus
+effort: xhigh
 ---
 
 # Writing Plans
@@ -163,6 +165,11 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 **4. Review Focus:** For each input class or failure mode the spec implies, is there a task whose tests exercise it? The five uncovered ones most likely to bite a person go in the Review Focus section, and each line there gets its test added to the owning task. An empty section means you checked and found none, not that you skipped the check.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+
+**Optional Codex cross-check:** if `command -v codex` finds the Codex CLI,
+run the plan command from `../using-rs-power/references/model-policy.md`
+once, after the self-review. Fix each finding that holds up against the
+spec, inline as above. Without Codex, skip this step silently.
 
 ## Execution Handoff
 

@@ -183,40 +183,35 @@ implementation.
 
 ## Model Selection
 
-Use the least powerful model that can handle each role to conserve cost and increase speed.
+Every role has a plugin agent whose definition sets its model and effort —
+the values live in `../using-rs-power/references/model-policy.md`.
+Dispatch by agent name and omit `model`:
 
-**Mechanical implementation tasks** (isolated functions, clear specs, 1-2 files): use a fast, cheap model. Most implementation tasks are mechanical when the plan is well-specified.
+- Implementer — `rs-power:implementer`
+- Task review — `rs-power:reviewer`
+- Scoped re-review — `rs-power:re-reviewer`
+- Final whole-branch review — `rs-power:final-reviewer`
 
-**Integration and judgment tasks** (multi-file coordination, pattern matching, debugging): use a standard model.
+**Exceptions — pass `model` on the dispatch.** It overrides the
+definition's model; the effort stays the definition's.
 
-**Architecture and design tasks**: use the most capable available model.
-The final whole-branch review is one of these — dispatch it on the most
-capable available model, not the session default.
+- The task's plan text contains the complete code to write, or it is a
+  single-file mechanical fix: implementer with `model: haiku`.
+- The task touches auth, a migration, or a data-loss path, or its
+  implementer ran on Opus: task reviewer with `model: opus`.
+- Fix rounds 4-5: the fresh implementer gets `model: opus`.
+- The branch is security-sensitive (auth, crypto, secrets, permissions):
+  final reviewer with `model: fable`.
 
-**Review tasks**: choose the model with the same judgment, scaled to the
-diff's size, complexity, and risk. A small mechanical diff does not need the
-most capable model; a subtle concurrency change does. Scoped re-reviews of
-small fix diffs take a cheap-to-mid tier.
-
-**Fix-loop escalation (rounds 4-5)**: use a model at least one tier above
-the implementer that got stuck.
-
-**Always specify the model explicitly when dispatching a subagent.** An
-omitted model inherits your session's model — often the most capable and
-most expensive — which silently defeats this section.
+**Never dispatch these roles as `general-purpose`.** A general-purpose
+dispatch without a model inherits your session's model — often the most
+capable and most expensive — which silently defeats this section.
 
 **Turn count beats token price.** Wall-clock and context cost scale with how
 many turns a subagent takes, and the cheapest models routinely take 2-3× the
-turns on multi-step work — costing more overall. Use a mid-tier model as the
-floor for reviewers and for implementers working from prose descriptions.
-When the task's plan text contains the complete code to write, the
-implementation is transcription plus testing: use the cheapest tier for
-that implementer. Single-file mechanical fixes also take the cheapest tier.
-
-**Task complexity signals (implementation tasks):**
-- Touches 1-2 files with a complete spec → cheap model
-- Touches multiple files with integration concerns → standard model
-- Requires design judgment or broad codebase understanding → most capable model
+turns on multi-step work — costing more overall. That is why the
+implementer and reviewer floor is a mid-tier model, and the cheapest tier
+only takes tasks that are transcription plus testing.
 
 ## The Task Loop
 
@@ -449,7 +444,7 @@ The final whole-branch review gets a package too: run
 branch started from, e.g. `git merge-base main HEAD`) and include the
 printed path in the final review dispatch, so the final reviewer reads
 one file instead of re-deriving the branch diff with git commands. Dispatch
-on the most capable available model (see Model Selection), using
+`rs-power:final-reviewer` (see Model Selection), using
 rs-power:requesting-code-review's
 [code-reviewer.md](../requesting-code-review/code-reviewer.md). Point it at
 the ledger's deferred-minor and parked lines so it can triage which must be
@@ -559,7 +554,7 @@ Re-reviewer: Missing progress reporting — ADDRESSED (src/recovery.js:41).
 ...
 
 [After all tasks]
-[Run review-package PLAN_FILE MERGE_BASE HEAD; dispatch final code-reviewer, most capable model]
+[Run review-package PLAN_FILE MERGE_BASE HEAD; dispatch rs-power:final-reviewer]
 Final reviewer: All requirements met. Deferred minors triaged: none block merge.
 
 [Delete this plan's workspace — the record now lives in git]
