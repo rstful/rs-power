@@ -224,13 +224,16 @@ else
 fi
 echo ""
 
-# Test 3: Claude Code task-tracking tool was used
-echo "Test 3: Task tracking..."
-todo_count=$(grep -cE '"name":"(TodoWrite|TaskCreate|TaskUpdate|TaskList|TaskGet)"' "$SESSION_FILE" || echo "0")
-if [ "$todo_count" -ge 1 ]; then
-    echo "  [PASS] Task tracking used $todo_count time(s)"
+# Test 3: Progress was tracked in the SDD ledger
+# The skill tracks tasks in <workspace>/progress.md because that survives
+# compaction; the workspace itself is deleted after the final review, so the
+# session transcript is what still shows the ledger was written.
+echo "Test 3: Progress ledger..."
+ledger_count=$(grep -c 'progress\.md' "$SESSION_FILE" || true)
+if [ "${ledger_count:-0}" -ge 1 ]; then
+    echo "  [PASS] Ledger written $ledger_count time(s)"
 else
-    echo "  [FAIL] No Claude Code task-tracking tool used"
+    echo "  [FAIL] No SDD ledger (progress.md) activity in the session"
     FAILED=$((FAILED + 1))
 fi
 echo ""
