@@ -1,20 +1,17 @@
 {
-  "name": "superpowers",
-  "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
-  "version": "6.4.1",
+  "name": "rs-power",
+  "description": "RS Team internal skills harness for Claude Code, forked from obra/superpowers",
+  "version": "0.1.0",
   "author": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "RS Team"
   },
-  "homepage": "https://github.com/obra/superpowers",
-  "repository": "https://github.com/obra/superpowers",
+  "homepage": "https://github.com/rstful/rs-power",
+  "repository": "https://github.com/rstful/rs-power",
   "license": "MIT",
   "keywords": [
     "skills",
     "tdd",
     "debugging",
-    "collaboration",
-    "best-practices",
     "workflows"
   ]
 }

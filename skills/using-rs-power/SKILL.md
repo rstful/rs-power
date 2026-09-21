@@ -1,5 +1,5 @@
 ---
-name: using-superpowers
+name: using-rs-power
 description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
 ---
 
@@ -25,10 +25,10 @@ Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it h
 
 ## Skill Priority
 
-When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are rs-power's most common process skills, but the rule holds for any of them.
 
-- "Let's build X" → superpowers:brainstorming first, then implementation skills.
-- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+- "Let's build X" → rs-power:brainstorming first, then implementation skills.
+- "Fix this bug" → rs-power:systematic-debugging first, then domain skills.
 
 ## Red Flags
 
@@ -51,14 +51,7 @@ These thoughts mean STOP—you're rationalizing:
 
 ## Platform Adaptation
 
-If your harness appears here, read its reference file for special instructions:
-
-- Claude Code: `references/claude-code-tools.md`
-- Codex: `references/codex-tools.md`
-- Pi: `references/pi-tools.md`
-- Antigravity: `references/antigravity-tools.md`
-- Hermes Agent: `references/hermes-tools.md`
-- Muse: `references/muse-tools.md`
+Read `references/claude-code-tools.md` for Claude Code specific instructions.
 
 ## User Instructions
 
