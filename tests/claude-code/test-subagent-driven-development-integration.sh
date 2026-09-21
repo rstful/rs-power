@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Integration Test: subagent-driven-development workflow
+# Integration Test: rs-subagent-driven-development workflow
 # Actually executes a plan and verifies the new workflow behaviors
 #
 # Drill coverage: evals/scenarios/sdd-rejects-extra-features.yaml covers the
@@ -18,7 +18,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/test-helpers.sh"
 
 echo "========================================"
-echo " Integration Test: subagent-driven-development"
+echo " Integration Test: rs-subagent-driven-development"
 echo "========================================"
 echo ""
 echo "This test executes a real plan using the skill and verifies:"
@@ -59,7 +59,7 @@ mkdir -p src test docs/rs-power/plans
 cat > docs/rs-power/plans/implementation-plan.md <<'EOF'
 # Test Implementation Plan
 
-This is a minimal plan to test the subagent-driven-development workflow.
+This is a minimal plan to test the rs-subagent-driven-development workflow.
 
 ## Task 1: Create Add Function
 
@@ -126,13 +126,13 @@ echo ""
 echo "Project setup complete. Starting execution..."
 echo ""
 
-# Run Claude with subagent-driven-development
+# Run Claude with rs-subagent-driven-development
 # Capture full output to analyze
 OUTPUT_FILE="$TEST_PROJECT/claude-output.txt"
 
 # Create prompt file
 cat > "$TEST_PROJECT/prompt.txt" <<'EOF'
-I want you to execute the implementation plan at docs/rs-power/plans/implementation-plan.md using the subagent-driven-development skill.
+I want you to execute the implementation plan at docs/rs-power/plans/implementation-plan.md using the rs-subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
 1. Read the plan once at the beginning
@@ -146,7 +146,7 @@ EOF
 
 # Note: We use a longer timeout since this is integration testing
 # Use --allowed-tools to enable tool usage in headless mode
-PROMPT="Execute the implementation plan at docs/rs-power/plans/implementation-plan.md using the subagent-driven-development skill.
+PROMPT="Execute the implementation plan at docs/rs-power/plans/implementation-plan.md using the rs-subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
 1. Read the plan once at the beginning
@@ -205,8 +205,8 @@ echo ""
 
 # Test 1: Skill was invoked
 echo "Test 1: Skill tool invoked..."
-if grep -q '"name":"Skill".*"skill":"rs-power:subagent-driven-development"' "$SESSION_FILE"; then
-    echo "  [PASS] subagent-driven-development skill was invoked"
+if grep -q '"name":"Skill".*"skill":"rs-power:rs-subagent-driven-development"' "$SESSION_FILE"; then
+    echo "  [PASS] rs-subagent-driven-development skill was invoked"
 else
     echo "  [FAIL] Skill was not invoked"
     FAILED=$((FAILED + 1))
@@ -314,7 +314,7 @@ if [ $FAILED -eq 0 ]; then
     echo "STATUS: PASSED"
     echo "All verification tests passed!"
     echo ""
-    echo "The subagent-driven-development skill correctly:"
+    echo "The rs-subagent-driven-development skill correctly:"
     echo "  ✓ Reads plan once at start"
     echo "  ✓ Provides full task text to subagents"
     echo "  ✓ Enforces self-review"

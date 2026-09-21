@@ -19,16 +19,16 @@ This is not negotiable. You cannot rationalize your way out of this.
 
 **Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
 
-**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+**Before entering plan mode:** if you haven't already brainstormed, invoke the rs-brainstorming skill first.
 
 Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
 
 ## Skill Priority
 
-When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are rs-power's most common process skills, but the rule holds for any of them.
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. rs-brainstorming and rs-systematic-debugging are rs-power's most common process skills, but the rule holds for any of them.
 
-- "Let's build X" → rs-power:brainstorming first, then implementation skills.
-- "Fix this bug" → rs-power:systematic-debugging first, then domain skills.
+- "Let's build X" → rs-power:rs-brainstorming first, then implementation skills.
+- "Fix this bug" → rs-power:rs-systematic-debugging first, then domain skills.
 
 ## Red Flags
 

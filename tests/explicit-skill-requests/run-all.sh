@@ -14,9 +14,9 @@ PASSED=0
 FAILED=0
 RESULTS=""
 
-# Test: subagent-driven-development, please
+# Test: rs-subagent-driven-development, please
 echo ">>> Test 1: subagent-driven-development-please"
-if "$SCRIPT_DIR/run-test.sh" "subagent-driven-development" "$PROMPTS_DIR/subagent-driven-development-please.txt"; then
+if "$SCRIPT_DIR/run-test.sh" "rs-subagent-driven-development" "$PROMPTS_DIR/subagent-driven-development-please.txt"; then
     PASSED=$((PASSED + 1))
     RESULTS="$RESULTS\nPASS: subagent-driven-development-please"
 else
@@ -25,9 +25,9 @@ else
 fi
 echo ""
 
-# Test: use systematic-debugging
+# Test: use rs-systematic-debugging
 echo ">>> Test 2: use-systematic-debugging"
-if "$SCRIPT_DIR/run-test.sh" "systematic-debugging" "$PROMPTS_DIR/use-systematic-debugging.txt"; then
+if "$SCRIPT_DIR/run-test.sh" "rs-systematic-debugging" "$PROMPTS_DIR/use-systematic-debugging.txt"; then
     PASSED=$((PASSED + 1))
     RESULTS="$RESULTS\nPASS: use-systematic-debugging"
 else
@@ -38,7 +38,7 @@ echo ""
 
 # Test: please use brainstorming
 echo ">>> Test 3: please-use-brainstorming"
-if "$SCRIPT_DIR/run-test.sh" "brainstorming" "$PROMPTS_DIR/please-use-brainstorming.txt"; then
+if "$SCRIPT_DIR/run-test.sh" "rs-brainstorming" "$PROMPTS_DIR/please-use-brainstorming.txt"; then
     PASSED=$((PASSED + 1))
     RESULTS="$RESULTS\nPASS: please-use-brainstorming"
 else
@@ -49,7 +49,7 @@ echo ""
 
 # Test: mid-conversation execute plan
 echo ">>> Test 4: mid-conversation-execute-plan"
-if "$SCRIPT_DIR/run-test.sh" "subagent-driven-development" "$PROMPTS_DIR/mid-conversation-execute-plan.txt"; then
+if "$SCRIPT_DIR/run-test.sh" "rs-subagent-driven-development" "$PROMPTS_DIR/mid-conversation-execute-plan.txt"; then
     PASSED=$((PASSED + 1))
     RESULTS="$RESULTS\nPASS: mid-conversation-execute-plan"
 else

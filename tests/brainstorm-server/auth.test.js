@@ -19,12 +19,12 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 
-const SERVER_PATH = path.join(__dirname, '../../skills/brainstorming/scripts/server.cjs');
+const SERVER_PATH = path.join(__dirname, '../../skills/rs-brainstorming/scripts/server.cjs');
 const TEST_PORT = 3335;
-const TEST_DIR = '/tmp/brainstorm-auth-test';
+const TEST_DIR = '/tmp/rs-power-brainstorm-auth-test';
 const CONTENT_DIR = path.join(TEST_DIR, 'content');
 const TOKEN = 'testtoken-0123456789abcdef0123456789abcdef';
-const COOKIE_NAME = `brainstorm-key-${TEST_PORT}`;
+const COOKIE_NAME = `rs-power-brainstorm-key-${TEST_PORT}`;
 const EXPECTED_SECURITY_HEADERS = {
   'referrer-policy': 'no-referrer',
   'cache-control': 'no-store',
@@ -75,7 +75,7 @@ function wsConnect({ key, cookie, origin } = {}) {
 
 function startServer() {
   return spawn('node', [SERVER_PATH], {
-    env: { ...process.env, BRAINSTORM_PORT: TEST_PORT, BRAINSTORM_DIR: TEST_DIR, BRAINSTORM_TOKEN: TOKEN }
+    env: { ...process.env, RS_POWER_BRAINSTORM_PORT: TEST_PORT, RS_POWER_BRAINSTORM_DIR: TEST_DIR, RS_POWER_BRAINSTORM_TOKEN: TOKEN }
   });
 }
 

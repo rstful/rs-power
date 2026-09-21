@@ -7,8 +7,8 @@
 
 set -u
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-STOP="$SCRIPT_DIR/../../skills/brainstorming/scripts/stop-server.sh"
-SERVER="$SCRIPT_DIR/../../skills/brainstorming/scripts/server.cjs"
+STOP="$SCRIPT_DIR/../../skills/rs-brainstorming/scripts/stop-server.sh"
+SERVER="$SCRIPT_DIR/../../skills/rs-brainstorming/scripts/server.cjs"
 
 PASS=0; FAIL=0
 PIDS=()
@@ -64,7 +64,7 @@ fi
 SESS="$(mktemp -d)"; track_dir "$SESS"; mkdir -p "$SESS/content" "$SESS/state"
 SERVER_ID="$(new_server_id)"
 printf '%s\n' "$SERVER_ID" > "$SESS/state/server-instance-id"
-BRAINSTORM_DIR="$SESS" BRAINSTORM_PORT=3399 node "$SERVER" "--brainstorm-server-id=$SERVER_ID" > /dev/null 2>&1 &
+RS_POWER_BRAINSTORM_DIR="$SESS" RS_POWER_BRAINSTORM_PORT=3399 node "$SERVER" "--rs-power-brainstorm-server-id=$SERVER_ID" > /dev/null 2>&1 &
 SRV=$!
 track_pid "$SRV"
 disown "$SRV" 2>/dev/null || true
@@ -88,7 +88,7 @@ fi
 SESS="$(mktemp -d "$SCRIPT_DIR/.stop-persistent.XXXXXX")"; track_dir "$SESS"; mkdir -p "$SESS/content" "$SESS/state"
 SERVER_ID="$(new_server_id)"
 printf '%s\n' "$SERVER_ID" > "$SESS/state/server-instance-id"
-BRAINSTORM_DIR="$SESS" BRAINSTORM_PORT=0 node "$SERVER" "--brainstorm-server-id=$SERVER_ID" > /dev/null 2>&1 &
+RS_POWER_BRAINSTORM_DIR="$SESS" RS_POWER_BRAINSTORM_PORT=0 node "$SERVER" "--rs-power-brainstorm-server-id=$SERVER_ID" > /dev/null 2>&1 &
 SRV=$!
 track_pid "$SRV"
 disown "$SRV" 2>/dev/null || true
@@ -145,7 +145,7 @@ SESS="$(mktemp -d)"; track_dir "$SESS"; mkdir -p "$SESS/state"
 EXPECTED_ID="$(new_server_id)"
 WRONG_ID="$(new_server_id)"
 printf '%s\n' "$EXPECTED_ID" > "$SESS/state/server-instance-id"
-( exec -a "node server.cjs --brainstorm-server-id=$WRONG_ID" sleep 600 ) &
+( exec -a "node server.cjs --rs-power-brainstorm-server-id=$WRONG_ID" sleep 600 ) &
 IMPOSTOR=$!
 track_pid "$IMPOSTOR"
 disown "$IMPOSTOR" 2>/dev/null || true
@@ -163,7 +163,7 @@ fi
 # --- Test 6: malformed instance id is fail-closed ---
 SESS="$(mktemp -d)"; track_dir "$SESS"; mkdir -p "$SESS/state"
 printf '%s\n' 'bad id with spaces' > "$SESS/state/server-instance-id"
-( exec -a "node server.cjs --brainstorm-server-id=bad-id-with-spaces" sleep 600 ) &
+( exec -a "node server.cjs --rs-power-brainstorm-server-id=bad-id-with-spaces" sleep 600 ) &
 IMPOSTOR=$!
 track_pid "$IMPOSTOR"
 disown "$IMPOSTOR" 2>/dev/null || true

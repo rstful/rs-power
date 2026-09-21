@@ -20,9 +20,9 @@ set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="${RS_POWER_ROOT:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
-START_SCRIPT="$REPO_ROOT/skills/brainstorming/scripts/start-server.sh"
-STOP_SCRIPT="$REPO_ROOT/skills/brainstorming/scripts/stop-server.sh"
-SERVER_SCRIPT="$REPO_ROOT/skills/brainstorming/scripts/server.cjs"
+START_SCRIPT="$REPO_ROOT/skills/rs-brainstorming/scripts/start-server.sh"
+STOP_SCRIPT="$REPO_ROOT/skills/rs-brainstorming/scripts/stop-server.sh"
+SERVER_SCRIPT="$REPO_ROOT/skills/rs-brainstorming/scripts/server.cjs"
 
 TEST_DIR="${TMPDIR:-/tmp}/brainstorm-win-test-$$"
 
@@ -153,7 +153,7 @@ else
   skip "OWNER_PID is empty on Windows" "not on Windows"
 fi
 
-# ========== Test 2: start-server.sh passes empty BRAINSTORM_OWNER_PID ==========
+# ========== Test 2: start-server.sh passes empty RS_POWER_BRAINSTORM_OWNER_PID ==========
 
 if [[ "$is_windows" == "true" ]]; then
   # Use a fake 'node' that captures the env var and exits
@@ -161,7 +161,7 @@ if [[ "$is_windows" == "true" ]]; then
   mkdir -p "$FAKE_NODE_DIR"
   cat > "$FAKE_NODE_DIR/node" <<'FAKENODE'
 #!/usr/bin/env bash
-echo "CAPTURED_OWNER_PID=${BRAINSTORM_OWNER_PID:-__UNSET__}"
+echo "CAPTURED_OWNER_PID=${RS_POWER_BRAINSTORM_OWNER_PID:-__UNSET__}"
 printf 'CAPTURED_ARGV=%s\n' "$@"
 exit 0
 FAKENODE
@@ -171,22 +171,22 @@ FAKENODE
   owner_pid_value=$(echo "$captured" | grep "CAPTURED_OWNER_PID=" | head -1 | sed 's/CAPTURED_OWNER_PID=//')
 
   if [[ "$owner_pid_value" == "" || "$owner_pid_value" == "__UNSET__" ]]; then
-    pass "start-server.sh passes empty BRAINSTORM_OWNER_PID on Windows"
+    pass "start-server.sh passes empty RS_POWER_BRAINSTORM_OWNER_PID on Windows"
   else
-    fail "start-server.sh passes empty BRAINSTORM_OWNER_PID on Windows" \
+    fail "start-server.sh passes empty RS_POWER_BRAINSTORM_OWNER_PID on Windows" \
          "Expected empty or unset, got '$owner_pid_value'"
   fi
 
-  if echo "$captured" | grep -Eq '^CAPTURED_ARGV=--brainstorm-server-id=[A-Za-z0-9_-]{32,64}$'; then
+  if echo "$captured" | grep -Eq '^CAPTURED_ARGV=--rs-power-brainstorm-server-id=[A-Za-z0-9_-]{32,64}$'; then
     pass "start-server.sh passes server instance id argv on Windows"
   else
     fail "start-server.sh passes server instance id argv on Windows" \
-         "Expected --brainstorm-server-id=<safe id>, output: $captured"
+         "Expected --rs-power-brainstorm-server-id=<safe id>, output: $captured"
   fi
 
   rm -rf "$FAKE_NODE_DIR" "$TEST_DIR/session"
 else
-  skip "start-server.sh passes empty BRAINSTORM_OWNER_PID" "not on Windows"
+  skip "start-server.sh passes empty RS_POWER_BRAINSTORM_OWNER_PID" "not on Windows"
 fi
 
 # ========== Test 3: Auto-foreground detection on Windows ==========
@@ -228,11 +228,11 @@ mkdir -p "$TEST_DIR/survival"
 
 echo "  Starting server (will wait ~75s to verify survival past lifecycle check)..."
 
-BRAINSTORM_DIR="$TEST_DIR/survival" \
-BRAINSTORM_HOST="127.0.0.1" \
-BRAINSTORM_URL_HOST="localhost" \
-BRAINSTORM_OWNER_PID="" \
-BRAINSTORM_PORT=$((49152 + RANDOM % 16383)) \
+RS_POWER_BRAINSTORM_DIR="$TEST_DIR/survival" \
+RS_POWER_BRAINSTORM_HOST="127.0.0.1" \
+RS_POWER_BRAINSTORM_URL_HOST="localhost" \
+RS_POWER_BRAINSTORM_OWNER_PID="" \
+RS_POWER_BRAINSTORM_PORT=$((49152 + RANDOM % 16383)) \
   node "$SERVER_SCRIPT" > "$TEST_DIR/survival/.server.log" 2>&1 &
 SERVER_PID=$!
 
@@ -276,7 +276,7 @@ fi
 
 # ========== Test 5: Dead-at-startup OWNER_PID is logged but does not kill the server ==========
 #
-# The server validates BRAINSTORM_OWNER_PID at startup. If it's already dead,
+# The server validates RS_POWER_BRAINSTORM_OWNER_PID at startup. If it's already dead,
 # the PID resolution was wrong (common on WSL, Tailscale SSH, cross-user
 # scenarios). The server logs 'owner-pid-invalid', disables owner monitoring,
 # and continues running. The idle timeout becomes the only shutdown trigger.
@@ -292,11 +292,11 @@ while kill -0 "$BAD_PID" 2>/dev/null; do
   BAD_PID=$((BAD_PID + 1))
 done
 
-BRAINSTORM_DIR="$TEST_DIR/control" \
-BRAINSTORM_HOST="127.0.0.1" \
-BRAINSTORM_URL_HOST="localhost" \
-BRAINSTORM_OWNER_PID="$BAD_PID" \
-BRAINSTORM_PORT=$((49152 + RANDOM % 16383)) \
+RS_POWER_BRAINSTORM_DIR="$TEST_DIR/control" \
+RS_POWER_BRAINSTORM_HOST="127.0.0.1" \
+RS_POWER_BRAINSTORM_URL_HOST="localhost" \
+RS_POWER_BRAINSTORM_OWNER_PID="$BAD_PID" \
+RS_POWER_BRAINSTORM_PORT=$((49152 + RANDOM % 16383)) \
   node "$SERVER_SCRIPT" > "$TEST_DIR/control/.server.log" 2>&1 &
 CONTROL_PID=$!
 
@@ -346,12 +346,12 @@ mkdir -p "$TEST_DIR/stop-test/state"
 STOP_TEST_ID="$(printf 'windowsstop%021d\n' "$RANDOM")"
 printf '%s\n' "$STOP_TEST_ID" > "$TEST_DIR/stop-test/state/server-instance-id"
 
-BRAINSTORM_DIR="$TEST_DIR/stop-test" \
-BRAINSTORM_HOST="127.0.0.1" \
-BRAINSTORM_URL_HOST="localhost" \
-BRAINSTORM_OWNER_PID="" \
-BRAINSTORM_PORT=$((49152 + RANDOM % 16383)) \
-  node "$SERVER_SCRIPT" "--brainstorm-server-id=$STOP_TEST_ID" > "$TEST_DIR/stop-test/.server.log" 2>&1 &
+RS_POWER_BRAINSTORM_DIR="$TEST_DIR/stop-test" \
+RS_POWER_BRAINSTORM_HOST="127.0.0.1" \
+RS_POWER_BRAINSTORM_URL_HOST="localhost" \
+RS_POWER_BRAINSTORM_OWNER_PID="" \
+RS_POWER_BRAINSTORM_PORT=$((49152 + RANDOM % 16383)) \
+  node "$SERVER_SCRIPT" "--rs-power-brainstorm-server-id=$STOP_TEST_ID" > "$TEST_DIR/stop-test/.server.log" 2>&1 &
 STOP_TEST_PID=$!
 disown "$STOP_TEST_PID" 2>/dev/null || true
 echo "$STOP_TEST_PID" > "$TEST_DIR/stop-test/state/server.pid"

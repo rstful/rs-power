@@ -1,7 +1,7 @@
 const assert = require('assert');
 const {
   browserLauncherForPlatform
-} = require('../../skills/brainstorming/scripts/server.cjs');
+} = require('../../skills/rs-brainstorming/scripts/server.cjs');
 
 let passed = 0;
 let failed = 0;

@@ -10,7 +10,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const HELPER = path.join(__dirname, '../../skills/brainstorming/scripts/helper.js');
+const HELPER = path.join(__dirname, '../../skills/rs-brainstorming/scripts/helper.js');
 
 const src = fs.readFileSync(HELPER, 'utf-8');
 
@@ -103,7 +103,7 @@ function makeEnv() {
         reload() { state.reloads++; },
         replace(url) { state.replacements.push(url); }
       },
-      sessionStorage: { getItem: (key) => key === 'brainstorm-session-key' ? state.sessionKey : null }
+      sessionStorage: { getItem: (key) => key === 'rs-power-brainstorm-session-key' ? state.sessionKey : null }
     },
     document: {
       querySelector: (s) => s === '.status' ? statusEl : null,

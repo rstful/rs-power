@@ -7,8 +7,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-USING_SKILL="$REPO_ROOT/skills/using-git-worktrees/SKILL.md"
-FINISHING_SKILL="$REPO_ROOT/skills/finishing-a-development-branch/SKILL.md"
+USING_SKILL="$REPO_ROOT/skills/rs-using-git-worktrees/SKILL.md"
+FINISHING_SKILL="$REPO_ROOT/skills/rs-finishing-a-development-branch/SKILL.md"
 
 failures=0
 
@@ -45,13 +45,13 @@ assert_not_contains() {
 echo "=== Worktree Path Policy Test ==="
 echo ""
 
-assert_not_contains "$USING_SKILL" "~/.config/rs-power/worktrees" "using-git-worktrees does not mention old global path"
-assert_not_contains "$USING_SKILL" "global legacy" "using-git-worktrees does not use unclear global legacy shorthand"
-assert_not_contains "$USING_SKILL" "Global path" "using-git-worktrees has no global path quick-reference row"
-assert_contains "$USING_SKILL" 'default to `.worktrees/` at the project root' "using-git-worktrees defaults new manual worktrees to .worktrees/"
+assert_not_contains "$USING_SKILL" "~/.config/rs-power/worktrees" "rs-using-git-worktrees does not mention old global path"
+assert_not_contains "$USING_SKILL" "global legacy" "rs-using-git-worktrees does not use unclear global legacy shorthand"
+assert_not_contains "$USING_SKILL" "Global path" "rs-using-git-worktrees has no global path quick-reference row"
+assert_contains "$USING_SKILL" 'default to `.worktrees/` at the project root' "rs-using-git-worktrees defaults new manual worktrees to .worktrees/"
 
-assert_not_contains "$FINISHING_SKILL" "~/.config/rs-power/worktrees" "finishing-a-development-branch does not treat old global path as owned"
-assert_contains "$FINISHING_SKILL" '`.worktrees/` or `worktrees/`' "finishing-a-development-branch keeps project-local cleanup ownership"
+assert_not_contains "$FINISHING_SKILL" "~/.config/rs-power/worktrees" "rs-finishing-a-development-branch does not treat old global path as owned"
+assert_contains "$FINISHING_SKILL" '`.worktrees/` or `worktrees/`' "rs-finishing-a-development-branch keeps project-local cleanup ownership"
 
 
 echo ""

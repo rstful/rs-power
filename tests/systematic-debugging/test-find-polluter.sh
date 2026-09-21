@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-SCRIPT_UNDER_TEST="$REPO_ROOT/skills/systematic-debugging/find-polluter.sh"
+SCRIPT_UNDER_TEST="$REPO_ROOT/skills/rs-systematic-debugging/find-polluter.sh"
 
 FAILURES=0
 TEST_ROOT="$(mktemp -d)"

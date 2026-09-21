@@ -9,7 +9,7 @@ const path = require('path');
 const assert = require('assert');
 
 const REPO_ROOT = path.join(__dirname, '../..');
-const SERVER_PATH = path.join(REPO_ROOT, 'skills/brainstorming/scripts/server.cjs');
+const SERVER_PATH = path.join(REPO_ROOT, 'skills/rs-brainstorming/scripts/server.cjs');
 const PACKAGE_VERSION = JSON.parse(
   fs.readFileSync(path.join(REPO_ROOT, '.claude-plugin/plugin.json'), 'utf-8')
 ).version;
@@ -30,9 +30,9 @@ function startServer({ port, dir, env = {}, serverPath = SERVER_PATH }) {
   return spawn('node', [serverPath], {
     env: {
       ...process.env,
-      BRAINSTORM_PORT: String(port),
-      BRAINSTORM_DIR: dir,
-      BRAINSTORM_TOKEN: TOKEN,
+      RS_POWER_BRAINSTORM_PORT: String(port),
+      RS_POWER_BRAINSTORM_DIR: dir,
+      RS_POWER_BRAINSTORM_TOKEN: TOKEN,
       ...env
     }
   });
@@ -58,7 +58,7 @@ function waitForServer(server) {
 
 function fetchHtml(port) {
   return new Promise((resolve, reject) => {
-    const headers = { Cookie: `brainstorm-key-${port}=${TOKEN}` };
+    const headers = { Cookie: `rs-power-brainstorm-key-${port}=${TOKEN}` };
     http.get(`http://localhost:${port}/`, { headers }, (res) => {
       let body = '';
       res.on('data', chunk => { body += chunk; });
@@ -140,7 +140,7 @@ async function main() {
 
   await test('framed screens render local rs-power branding in the header', async () => {
     const port = 3451;
-    const dir = '/tmp/brainstorm-branding-default';
+    const dir = '/tmp/rs-power-brainstorm-branding-default';
     await withServer({ port, dir }, async () => {
       writeFragment(dir);
       await sleep(300);
@@ -153,7 +153,7 @@ async function main() {
 
   await test('waiting screen renders local rs-power branding', async () => {
     const port = 3452;
-    const dir = '/tmp/brainstorm-branding-waiting';
+    const dir = '/tmp/rs-power-brainstorm-branding-waiting';
     await withServer({ port, dir }, async () => {
       const html = await fetchHtml(port);
       assert(html.includes('Waiting for the agent'), 'waiting page should still render');

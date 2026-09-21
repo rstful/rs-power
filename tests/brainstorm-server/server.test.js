@@ -15,9 +15,9 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 
-const SERVER_PATH = path.join(__dirname, '../../skills/brainstorming/scripts/server.cjs');
+const SERVER_PATH = path.join(__dirname, '../../skills/rs-brainstorming/scripts/server.cjs');
 const TEST_PORT = 3334;
-const TEST_DIR = '/tmp/brainstorm-test';
+const TEST_DIR = '/tmp/rs-power-brainstorm-test';
 const CONTENT_DIR = path.join(TEST_DIR, 'content');
 const STATE_DIR = path.join(TEST_DIR, 'state');
 // Fixed session key so the test client can authenticate (see auth.test.js for
@@ -36,7 +36,7 @@ async function sleep(ms) {
 
 async function fetch(url) {
   return new Promise((resolve, reject) => {
-    const headers = { Cookie: `brainstorm-key-${TEST_PORT}=${TOKEN}` };
+    const headers = { Cookie: `rs-power-brainstorm-key-${TEST_PORT}=${TOKEN}` };
     http.get(url, { headers }, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
@@ -51,7 +51,7 @@ async function fetch(url) {
 
 function startServer() {
   return spawn('node', [SERVER_PATH], {
-    env: { ...process.env, BRAINSTORM_PORT: TEST_PORT, BRAINSTORM_DIR: TEST_DIR, BRAINSTORM_TOKEN: TOKEN }
+    env: { ...process.env, RS_POWER_BRAINSTORM_PORT: TEST_PORT, RS_POWER_BRAINSTORM_DIR: TEST_DIR, RS_POWER_BRAINSTORM_TOKEN: TOKEN }
   });
 }
 
@@ -544,7 +544,7 @@ async function runTests() {
 
     await test('helper.js defines required APIs', () => {
       const helperContent = fs.readFileSync(
-        path.join(__dirname, '../../skills/brainstorming/scripts/helper.js'), 'utf-8'
+        path.join(__dirname, '../../skills/rs-brainstorming/scripts/helper.js'), 'utf-8'
       );
       assert(helperContent.includes('toggleSelect'), 'Should define toggleSelect');
       assert(helperContent.includes('sendEvent'), 'Should define sendEvent');
@@ -558,7 +558,7 @@ async function runTests() {
 
     await test('frame template has required structure', () => {
       const template = fs.readFileSync(
-        path.join(__dirname, '../../skills/brainstorming/scripts/frame-template.html'), 'utf-8'
+        path.join(__dirname, '../../skills/rs-brainstorming/scripts/frame-template.html'), 'utf-8'
       );
       assert(template.includes('<div class="header">'), 'Should have top header markup');
       assert(!template.includes('indicator-bar'), 'Should not have footer chrome');

@@ -3,7 +3,7 @@ set -u
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-SCRIPT_UNDER_TEST="$REPO_ROOT/skills/writing-skills/render-graphs.js"
+SCRIPT_UNDER_TEST="$REPO_ROOT/skills/rs-writing-skills/render-graphs.js"
 NODE_BIN="$(command -v node)"
 
 PASSES=0

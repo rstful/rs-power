@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Tests for executing-plans' bookkeeping helpers: scripts/task-start extracts
+# Tests for rs-executing-plans' bookkeeping helpers: scripts/task-start extracts
 # the brief and records BASE in one call; scripts/task-done runs the task's
 # test command, records the result in the ledger, and refuses to record a
 # failing task.
@@ -7,7 +7,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-EP_SCRIPTS="$REPO_ROOT/skills/executing-plans/scripts"
+EP_SCRIPTS="$REPO_ROOT/skills/rs-executing-plans/scripts"
 
 FAILURES=0
 TEST_ROOT=""
@@ -25,7 +25,7 @@ cleanup() {
 }
 
 main() {
-    echo "=== Test: executing-plans scripts ==="
+    echo "=== Test: rs-executing-plans scripts ==="
 
     TEST_ROOT="$(mktemp -d)"
     trap cleanup EXIT

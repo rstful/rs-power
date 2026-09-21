@@ -10,16 +10,16 @@ the skill frontmatter and the `rs-power:` agent definitions set, and
 
 | Stage | Set by | Model / effort | Optional Codex |
 |---|---|---|---|
-| brainstorming | skill frontmatter | Opus 5 / medium | none |
-| writing-plans | skill frontmatter | Opus 5 / xhigh | once after the plan is complete, medium |
+| rs-brainstorming | skill frontmatter | Opus 5 / medium | none |
+| rs-writing-plans | skill frontmatter | Opus 5 / xhigh | once after the plan is complete, medium |
 | plan and spec document review | `rs-power:reviewer` | Sonnet 5 / high | none |
 | implementer | `rs-power:implementer` | Sonnet 5 / medium | none |
 | task review | `rs-power:reviewer` | Sonnet 5 / high | none |
 | re-review | `rs-power:re-reviewer` | Sonnet 5 / medium | none |
 | final code review | `rs-power:final-reviewer` | Opus 5 / high | once on the finished branch, high |
-| systematic-debugging | skill frontmatter | Opus 5 / high | none |
-| executing-plans | skill frontmatter | Opus 5 / medium | none |
-| finishing-a-development-branch | skill frontmatter | Haiku 4.5 | none |
+| rs-systematic-debugging | skill frontmatter | Opus 5 / high | none |
+| rs-executing-plans | skill frontmatter | Opus 5 / medium | none |
+| rs-finishing-a-development-branch | skill frontmatter | Haiku 4.5 | none |
 
 Exceptions go through the Agent call's `model` argument, which overrides
 the agent definition's model; the effort stays the definition's. Never add
@@ -43,7 +43,7 @@ an agent per effort level.
 
 Fable costs the most, so it has exactly two seats:
 
-1. **systematic-debugging after two failed hypotheses** — switch the
+1. **rs-systematic-debugging after two failed hypotheses** — switch the
    session to Fable at xhigh (`/model fable`, `/effort xhigh`).
 2. **Final review of a security-sensitive branch** (auth, crypto, secrets,
    permissions) — dispatch `rs-power:final-reviewer` with `model: fable`.
@@ -52,7 +52,7 @@ Fable costs the most, so it has exactly two seats:
 
 A skill's `model` and `effort` frontmatter applies only to the rest of the
 turn that invoked it; the next prompt runs on the session model again.
-brainstorming and systematic-debugging span many turns, so when the
+rs-brainstorming and rs-systematic-debugging span many turns, so when the
 session model differs from the table, say once, in one line, which
 `/model` and `/effort` commands would match it. Do not switch for your
 human partner.
@@ -62,7 +62,7 @@ human partner.
 Run only when `command -v codex` finds the Codex CLI; otherwise skip
 silently. Each point runs once — never loop on Codex output.
 
-- **After writing-plans completes the plan:**
+- **After rs-writing-plans completes the plan:**
 
   ```bash
   codex exec -m gpt-6-astra -c model_reasoning_effort=medium -s read-only \

@@ -1,6 +1,6 @@
 {
   "name": "rs-power",
-  "description": "RS Team internal skills harness for Claude Code, forked from obra/superpowers",
+  "description": "RS Team internal skills harness for Claude Code",
   "version": "0.1.0",
   "author": {
     "name": "RS Team"

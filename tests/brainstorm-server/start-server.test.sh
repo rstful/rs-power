@@ -4,7 +4,7 @@ set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-START_SCRIPT="$REPO_ROOT/skills/brainstorming/scripts/start-server.sh"
+START_SCRIPT="$REPO_ROOT/skills/rs-brainstorming/scripts/start-server.sh"
 
 TEST_DIR="${TMPDIR:-/tmp}/brainstorm-start-test-$$"
 passed=0
@@ -47,7 +47,7 @@ make_fake_uname "$TEST_DIR/fake-bin"
 
 cat > "$TEST_DIR/fake-bin/node" <<'EOF'
 #!/usr/bin/env bash
-echo "CAPTURED_OWNER_PID=${BRAINSTORM_OWNER_PID:-__UNSET__}"
+echo "CAPTURED_OWNER_PID=${RS_POWER_BRAINSTORM_OWNER_PID:-__UNSET__}"
 printf 'CAPTURED_ARGV=%s\n' "$@"
 exit 0
 EOF
@@ -61,17 +61,17 @@ captured=$(
 owner_pid_value=$(echo "$captured" | grep "CAPTURED_OWNER_PID=" | head -1 | sed 's/CAPTURED_OWNER_PID=//')
 
 if [[ "$owner_pid_value" == "" || "$owner_pid_value" == "__UNSET__" ]]; then
-  pass "clears BRAINSTORM_OWNER_PID when uname reports a Windows-like shell"
+  pass "clears RS_POWER_BRAINSTORM_OWNER_PID when uname reports a Windows-like shell"
 else
-  fail "clears BRAINSTORM_OWNER_PID when uname reports a Windows-like shell" \
+  fail "clears RS_POWER_BRAINSTORM_OWNER_PID when uname reports a Windows-like shell" \
        "expected empty or unset, got '$owner_pid_value'"
 fi
 
-if echo "$captured" | grep -Eq '^CAPTURED_ARGV=--brainstorm-server-id=[A-Za-z0-9_-]{32,64}$'; then
+if echo "$captured" | grep -Eq '^CAPTURED_ARGV=--rs-power-brainstorm-server-id=[A-Za-z0-9_-]{32,64}$'; then
   pass "passes shell-safe server instance id argv"
 else
   fail "passes shell-safe server instance id argv" \
-       "expected exact --brainstorm-server-id=<safe id> argv line, got: $captured"
+       "expected exact --rs-power-brainstorm-server-id=<safe id> argv line, got: $captured"
 fi
 
 server_id_file=$(find "$TEST_DIR/project/.rs-power/brainstorm" -name server-instance-id -print 2>/dev/null | head -1)

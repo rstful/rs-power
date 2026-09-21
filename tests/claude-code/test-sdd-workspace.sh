@@ -6,7 +6,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-SDD_SCRIPTS="$REPO_ROOT/skills/subagent-driven-development/scripts"
+SDD_SCRIPTS="$REPO_ROOT/skills/rs-subagent-driven-development/scripts"
 
 FAILURES=0
 TEST_ROOT=""
