@@ -229,11 +229,38 @@ echo ""
 # compaction; the workspace itself is deleted after the final review, so the
 # session transcript is what still shows the ledger was written.
 echo "Test 3: Progress ledger..."
-ledger_count=$(grep -c 'progress\.md' "$SESSION_FILE" || true)
-if [ "${ledger_count:-0}" -ge 1 ]; then
-    echo "  [PASS] Ledger written $ledger_count time(s)"
+# Look for writes, not mentions: the skill text loaded into the transcript names
+# progress.md and even shows example completion lines, so any substring match
+# over the raw transcript passes with nothing written. Read the tool calls
+# instead, and count only the ones that write the ledger.
+read -r ledger_writes ledger_completions <<EOF
+$(node -e '
+const fs = require("fs");
+let writes = 0, completions = 0;
+for (const line of fs.readFileSync(process.argv[1], "utf8").split("\n")) {
+  if (!line.trim()) continue;
+  let entry; try { entry = JSON.parse(line); } catch { continue; }
+  const content = entry.message && entry.message.content;
+  if (!Array.isArray(content)) continue;
+  for (const block of content) {
+    if (block.type !== "tool_use" || !block.input) continue;
+    const command = String(block.input.command || "");
+    const path = String(block.input.file_path || "");
+    const writeTool = block.name === "Write" || block.name === "Edit" || block.name === "MultiEdit";
+    const wrote = />>?\s*"?[^"\s]*progress\.md/.test(command) || (writeTool && /progress\.md$/.test(path));
+    if (!wrote) continue;
+    writes++;
+    const body = command + String(block.input.content || "") + String(block.input.new_string || "");
+    completions += (body.match(/Task \d+: complete/g) || []).length;
+  }
+}
+process.stdout.write(writes + " " + completions);
+' "$SESSION_FILE")
+EOF
+if [ "${ledger_writes:-0}" -ge 1 ] && [ "${ledger_completions:-0}" -ge 1 ]; then
+    echo "  [PASS] Ledger written ($ledger_writes write(s), $ledger_completions completion line(s))"
 else
-    echo "  [FAIL] No SDD ledger (progress.md) activity in the session"
+    echo "  [FAIL] No SDD ledger writes (writes=$ledger_writes completions=$ledger_completions)"
     FAILED=$((FAILED + 1))
 fi
 echo ""
